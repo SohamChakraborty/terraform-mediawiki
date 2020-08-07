@@ -1,10 +1,10 @@
-output "soham-ssh-key-name" {
+output "mediawiki-ssh-key-name" {
     description                 = "Name of the key pair"
-    value                       = aws_key_pair.soham_ssh_key.id
+    value                       = aws_key_pair.mediawiki_ssh_key.id
 }
 
-output "soham-ssh-key-id" {
+output "mediawiki-ssh-key-id" {
     description                 = "ID of the key pair"
-    value                       = aws_key_pair.soham_ssh_key.key_pair_id
+    value                       = aws_key_pair.mediawiki_ssh_key.key_pair_id
 }
 

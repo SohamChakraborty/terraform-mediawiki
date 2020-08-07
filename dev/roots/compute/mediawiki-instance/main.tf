@@ -11,6 +11,10 @@ provider "aws" {
     version                 = "2.69"
 }
 
+provider "template" {
+    version                 = "2.1"
+}
+
 data "aws_vpc" "selected" {
   filter {
     name = "tag:Environment"
@@ -37,6 +41,9 @@ data "aws_iam_instance_profile" "ec2-ssm-role" {
     name = "ec2-ssm-role"
 }
 
+data "template_file" "user_data" {
+    template = file("../userdata/mediawiki-instance/scripts/script.yaml")
+}
 resource "aws_instance" "mediawiki-instance" {
     ami                           = var.ami
     instance_type                 = var.instance_type
@@ -56,19 +63,12 @@ resource "aws_instance" "mediawiki-instance" {
             volume_type           = "gp2"
             delete_on_termination = true
     }
+    user_data                   = data.template_file.user_data.rendered
     tags    = {
         Environment             = var.environment
         Role                    = var.role
         Application             = var.application
     }
-
-
-
-
-
-
-
-
 
 //    provisioner "local-exec" {
 //    command = "echo ${aws_instance.mediawiki-instance.public_ip} > ip_address.txt"
