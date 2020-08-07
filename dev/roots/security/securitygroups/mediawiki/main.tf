@@ -18,12 +18,16 @@ data "aws_vpc" "selected" {
 }
 
 module "mediawiki_security_group" {
-    source                      = "terraform-aws-modules/security-group/aws//modules/ssh"
+    source                      = "terraform-aws-modules/security-group/aws"
     version                     = "~> 3.0"
     name                        = "security-group-${var.environment}-${var.role}"
-    description                 = "Security group for bastion host"
-    vpc_id                      = data.aws_vpc.selected.id #TBD
+    description                 = "Security group for mediawiki host"
+    vpc_id                      = data.aws_vpc.selected.id 
     ingress_cidr_blocks         = ["0.0.0.0/0"]
+    ingress_rules               = ["http-80-tcp", "ssh-tcp"]
+    egress_rules                = ["all-all"]
+    #computed_ingress_rules      = ["ssh-tcp"]
+    #number_of_computed_ingress_rules = 1
     tags                        = {
                 Environment     = var.environment
                 Role            = var.role
